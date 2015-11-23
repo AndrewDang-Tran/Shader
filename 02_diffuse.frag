@@ -19,12 +19,6 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  mat3 tbnInverse = tanspose(mat3(c0, c1, c2));
-  vec3 surfaceLightDirection = vec3(tbnInverse * lightDirection);
-  surfaceLightDirection = normalize(surfaceLightDirection);
-  float diffuse = dot(c2, surfaceLightDirection);
-  diffuse = clamp(diffuse, 0.0, 1.0);
-
-
-  gl_FragColor = decal * (LMa + LMd * diffuse);
+  float diffuse = max(lightDirection.z, 0.0);
+  gl_FragColor = (LMa + LMd * diffuse);
 }

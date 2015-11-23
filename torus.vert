@@ -14,37 +14,49 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  normalMapTexCoord = vec2(parametric.y, parametric.x);
+  normalMapTexCoord = vec2(parametric.x, parametric.y);
   vec2 uv = radians(parametric*360.0);
   float smallRadius = torusInfo.y;
   float largeRadius = torusInfo.x;
 
-  vec3 pos = vec3(  (largeRadius + smallRadius * cos(uv.x)) * cos(uv.y),
-  					(largeRadius + smallRadius * cos(uv.x)) * sin(uv.y),
-  					(smallRadius * sin(uv.x)));
+  float cosU = cos(uv.x);
+  float cosV = cos(uv.y);
+  float sinU = sin(uv.x);
+  float sinV = sin(uv.y);
+
+  vec3 pos = vec3(  (largeRadius + smallRadius * cosV) * cosU,
+  					(largeRadius + smallRadius * cosV) * sinU,
+  					(smallRadius * sinV));
   gl_Position = gl_ModelViewProjectionMatrix * vec4(pos.x, pos.y, pos.z, 1);
 
-  eyeDirection = vec3(pos - eyePosition);
-  eyeDirection = normalize(eyeDirection);
-  lightDirection = vec3(pos - lightPosition); 
-  lightDirection = normalize(eyeDirection);
-
-  halfAngle = (eyeDirection + lightDirection) / 2.0; 
-
-  vec3 tangent = vec3(  (largeRadius + smallRadius * -sin(uv.y)) * cos(uv.x),
-  						(largeRadius + smallRadius * -sin(uv.x)) * sin(uv.y),
-  						0.0);
+  vec3 tangent = vec3((largeRadius + smallRadius * cosV) * -sinU,
+              (largeRadius + smallRadius * cosV) * cosU,
+               0.0);
   tangent = normalize(tangent);
 
-  vec3 bitangent = vec3((largeRadius + smallRadius * cos(uv.x)) * -sin(uv.y),
-  						(largeRadius + smallRadius * cos(uv.x)) * cos(uv.y),
-  						0.0);
+  vec3 bitangent = vec3(  (smallRadius * -sinV) * cosU,
+              (smallRadius * -sinV) * sinU,
+               smallRadius * cosV);
   bitangent = normalize(bitangent);
 
   vec3 normal = cross(tangent, bitangent);
 
   c0 = tangent;
-  c1 = bitangent; 
-  c2 = normal; 
+  c1 = bitangent;
+  c2 = normal;
+
+  mat3 surfaceToObject = mat3(c0, c1, c2);
+  vec3 localPosition = surfaceToObject * pos;
+
+  lightDirection = lightPosition - localPosition; 
+
+  eyeDirection = eyePosition - localPosition;
+  eyeDirection = normalize(eyeDirection);
+
+  mat3 objectToSurface = transpose(surfaceToObject);
+
+  lightDirection = objectToSurface * lightDirection;
+  lightDirection = normalize(lightDirection);
+  halfAngle = (eyeDirection + lightDirection) / 2.0;
 }
 
