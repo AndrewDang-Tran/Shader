@@ -49,14 +49,12 @@ void main()
   vec3 localPosition = surfaceToObject * pos;
 
   lightDirection = lightPosition - localPosition; 
-
   eyeDirection = eyePosition - localPosition;
-  eyeDirection = normalize(eyeDirection);
 
   mat3 objectToSurface = transpose(surfaceToObject);
 
+  eyeDirection = objectToSurface * eyeDirection;
   lightDirection = objectToSurface * lightDirection;
-  lightDirection = normalize(lightDirection);
   halfAngle = (eyeDirection + lightDirection) / 2.0;
 }
 

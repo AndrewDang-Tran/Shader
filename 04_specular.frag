@@ -19,5 +19,8 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  gl_FragColor = vec4(1,0,0,1);  // XXX fix me
+  vec3 halfAngleNorm = normalize(halfAngle);
+  float specular = max(halfAngleNorm.z, 0.0);
+  specular = pow(specular, shininess);
+  gl_FragColor = LMa + LMs * specular;
 }
