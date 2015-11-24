@@ -20,9 +20,9 @@ varying vec3 c0, c1, c2;
 void main()
 {
   vec3 lightDirectionNorm = normalize(lightDirection);
-  vec2 texture = vec2(normalMapTexCoord.x * -6.0, normalMapTexCoord.y * 2.0);
+  vec2 texture = vec2(normalMapTexCoord.x, normalMapTexCoord.y);
   vec3 normal = vec3(texture2D(normalMap, texture));
-  normal = 2 * normal - 1;
+  normal = 2.0 * normal - 1.0;
   normal = normalize(normal);
   float diffuse = dot(lightDirectionNorm, normal);
   diffuse = max(diffuse, 0.0);

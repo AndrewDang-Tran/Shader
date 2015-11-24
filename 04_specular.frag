@@ -22,5 +22,6 @@ void main()
   vec3 halfAngleNorm = normalize(halfAngle);
   float specular = max(halfAngleNorm.z, 0.0);
   specular = pow(specular, shininess);
+  specular = max(specular, 0.0);
   gl_FragColor = LMa + LMs * specular;
 }

@@ -20,6 +20,6 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  	vec2 texture = vec2(normalMapTexCoord.x * -6.0, normalMapTexCoord.y * 2.0);
+  	vec2 texture = vec2(normalMapTexCoord.x, normalMapTexCoord.y);
   	gl_FragColor = texture2D(decal, texture);
 }

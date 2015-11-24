@@ -14,7 +14,7 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  normalMapTexCoord = vec2(parametric.x, parametric.y);
+  normalMapTexCoord = vec2(parametric.x  * -6.0, parametric.y * 2.0);
   vec2 uv = radians(parametric*360.0);
   float smallRadius = torusInfo.y;
   float largeRadius = torusInfo.x;
